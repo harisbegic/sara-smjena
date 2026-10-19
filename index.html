@@ -94,6 +94,7 @@
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { background: var(--blue-950); }
   body {
     margin: 0;
@@ -211,10 +212,6 @@
   .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
   .legend span { display: flex; align-items: center; gap: 6px; }
 
-  /* Setup notice */
-  .notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 1.45; }
-  .notice p { margin: 0; min-width: 0; }
-
   /* Settings */
   .settings h2 { font-family: var(--font-display); font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 4px; }
   .settings p { margin: 0 0 14px; font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
@@ -237,6 +234,7 @@
   }
   .pattern { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
   .chip { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
+  .reset { margin-top: 14px; }
   .status { font-size: 13px; font-weight: 600; color: var(--platinum-light); margin-top: 10px; min-height: 18px; }
 
   :focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
@@ -287,11 +285,6 @@
     </div>
   </section>
 
-  <section class="card notice" id="notice" hidden>
-    <p>Odaberi datum kada si radila prvu smjenu, da se raspored poklopi s tvojim.</p>
-    <button class="text-btn solid" id="goSetup" type="button">Postavi datum</button>
-  </section>
-
   <section class="card settings" id="settings">
     <h2>Početak rotacije</h2>
     <p>Odaberi bilo koji datum kada si radila prvu smjenu. Sve ostalo se računa na osnovu tog datuma.</p>
@@ -303,13 +296,19 @@
       <span class="chip s-free">3 · Slobodno</span>
       <span class="chip s-free">4 · Slobodno</span>
     </div>
+    <button class="text-btn reset" id="resetStart" type="button" hidden></button>
     <div class="status" id="saveStatus"></div>
   </section>
 </main>
 
 <script>
 (function () {
-  var KEY = "myShifts.startDate";
+  // ── FIKSNI POČETAK ROTACIJE ZA SVE ──────────────────────
+  // Datum prve smjene (GGGG-MM-DD). Za novi početak za sve, promijeni samo ovaj datum.
+  // Kad se ovaj datum promijeni, svima se poništi datum koji su sami postavili na telefonu.
+  var DEFAULT_START = "2026-10-12";
+
+  var KEY = "myShifts.start";
   var DAY_MS = 86400000;
 
   var CYCLE = [
@@ -346,12 +345,21 @@
   function serial(d) { return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS); }
   function validKey(k) { return typeof k === "string" && /^\d{4}-\d{2}-\d{2}$/.test(k); }
 
-  function load() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
-  function save(v) { try { localStorage.setItem(KEY, v); return true; } catch (e) { return false; } }
+  // A date picked on the phone counts only while DEFAULT_START in the code is unchanged
+  function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY));
+      if (saved && saved.base === DEFAULT_START && validKey(saved.start)) return saved.start;
+    } catch (e) {}
+    return DEFAULT_START;
+  }
+  function save(v) {
+    try { localStorage.setItem(KEY, JSON.stringify({ start: v, base: DEFAULT_START })); return true; } catch (e) { return false; }
+  }
+  function clearSaved() { try { localStorage.removeItem(KEY); } catch (e) {} }
+  function numericDate(k) { var p = k.split("-"); return Number(p[2]) + "." + Number(p[1]) + "." + p[0] + "."; }
 
   var startKey = load();
-  var isSet = validKey(startKey);
-  if (!isSet) startKey = keyOf(today());
 
   var t0 = today();
   var viewY = t0.getFullYear();
@@ -443,8 +451,9 @@
   }
 
   function renderAll() {
-    $("notice").hidden = isSet;
     $("startDate").value = startKey;
+    $("resetStart").textContent = "Vrati na " + numericDate(DEFAULT_START);
+    $("resetStart").hidden = startKey === DEFAULT_START;
     renderToday();
     renderCalendar();
   }
@@ -474,15 +483,16 @@
     var v = e.target.value;
     if (!validKey(v)) return;
     startKey = v;
-    isSet = true;
     var ok = save(v);
     $("saveStatus").textContent = ok ? "Sačuvano. Kalendar je ažuriran." : "Nije moguće sačuvati na ovom uređaju. Datum će se poništiti kad zatvoriš aplikaciju.";
     renderAll();
   });
 
-  $("goSetup").addEventListener("click", function () {
-    $("settings").scrollIntoView({ behavior: "smooth", block: "center" });
-    $("startDate").focus();
+  $("resetStart").addEventListener("click", function () {
+    startKey = DEFAULT_START;
+    clearSaved();
+    $("saveStatus").textContent = "Vraćeno na " + numericDate(DEFAULT_START);
+    renderAll();
   });
 
   // Refresh when the app comes back to the screen (e.g. the next morning)
