@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moje smjene</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Moje smjene">
+<meta name="theme-color" content="#a1c2e0">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap">
+<style>
+  :root {
+    /* ── Metalik plava: pozadina ─────────────────────────── */
+    --blue-950: #050a1c;
+    --blue-900: #0e1d40;
+    --blue-700: #213e71;
+    --blue-600: #3b649b;
+    --blue-500: #6590be;
+    --blue-300: #a1c2e0;
+    --blue-100: #dbeaf5;
+    --blue-deep: #014069;
+    --blue-650: #1f5287;
+
+    --bg-metal:
+      linear-gradient(118deg, transparent 38%, rgba(219, 234, 245, 0.07) 50%, transparent 62%),
+      linear-gradient(170deg,
+        var(--blue-300) 0%,
+        var(--blue-100) 7%,
+        var(--blue-500) 13%,
+        var(--blue-600) 24%,
+        var(--blue-650) 34%,
+        var(--blue-deep) 48%,
+        var(--blue-900) 72%,
+        var(--blue-950) 100%);
+
+    /* ── Tekst na tamnoj pozadini ────────────────────────── */
+    --text-primary: #ecf3f8;
+    --text-secondary: #afc0d1;
+    --text-muted: #7e91a7;
+
+    /* ── Prva smjena: zlato ──────────────────────────────── */
+    --gold-top: #f8e097;
+    --gold-bottom: #dcab53;
+    --gold: #eac675;
+    --gold-ink: #2f1e01;
+    --gold-light: #f0d592;
+    --gold-tint: rgba(234, 198, 117, 0.14);
+    --gold-border: rgba(234, 198, 117, 0.40);
+    --gold-fill: linear-gradient(160deg, var(--gold-top), var(--gold-bottom));
+
+    /* ── Noćna smjena: platina ───────────────────────────── */
+    --platinum-top: #eaeff3;
+    --platinum-bottom: #aeb9c2;
+    --platinum: #ccd4da;
+    --platinum-ink: #15202d;
+    --platinum-light: #d6e0e7;
+    --platinum-tint: rgba(204, 212, 218, 0.14);
+    --platinum-border: rgba(204, 212, 218, 0.40);
+    --platinum-fill: linear-gradient(160deg, var(--platinum-top), var(--platinum-bottom));
+
+    /* ── Slobodno: bakar ─────────────────────────────────── */
+    --copper-top: #e29668;
+    --copper-bottom: #c56e4c;
+    --copper: #d48259;
+    --copper-ink: #280d04;
+    --copper-light: #f5bc9b;
+    --copper-tint: rgba(212, 130, 89, 0.14);
+    --copper-border: rgba(212, 130, 89, 0.40);
+    --copper-fill: linear-gradient(160deg, var(--copper-top), var(--copper-bottom));
+
+    --metal-bevel: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+
+    /* ── Kartice: tamno staklo ───────────────────────────── */
+    --glass-bg: rgba(6, 14, 35, 0.60);
+    --glass-border: rgba(219, 234, 245, 0.10);
+    --glass-highlight: inset 0 1px 0 rgba(219, 234, 245, 0.08);
+    --glass-shadow: 0 12px 32px rgba(2, 5, 16, 0.45);
+    --glass-blur: blur(20px) saturate(140%);
+
+    /* ── Fontovi i kontrole ──────────────────────────────── */
+    --font-display: "Sora", "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --control-bg: rgba(219, 234, 245, 0.06);
+
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--blue-950); }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Gradient on a fixed layer, because iOS ignores background-attachment: fixed */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--bg-metal);
+  }
+
+  .app {
+    max-width: 460px;
+    margin: 0 auto;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Header sits on the light top of the metal, so it uses dark ink */
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 0 4px; }
+  .brand { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: -0.01em; color: var(--blue-900); }
+  .top .date { font-size: 14px; font-weight: 600; color: var(--blue-700); }
+
+  .card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: var(--glass-highlight), var(--glass-shadow);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+  }
+
+  /* Shift fills */
+  .s-first { background: var(--gold-fill); color: var(--gold-ink); box-shadow: var(--metal-bevel); }
+  .s-night { background: var(--platinum-fill); color: var(--platinum-ink); box-shadow: var(--metal-bevel); }
+  .s-free { background: var(--copper-fill); color: var(--copper-ink); box-shadow: var(--metal-bevel); }
+
+  /* Today */
+  .today { padding: 22px 20px 20px; }
+  .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-secondary); }
+  .today-row { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+  .badge { width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; flex: none; }
+  .badge svg { width: 30px; height: 30px; }
+  .today-name { font-family: var(--font-display); font-size: 31px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; }
+  .today-sub { font-size: 14px; color: var(--text-secondary); margin-top: 5px; }
+  .next { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--glass-border); display: grid; gap: 12px; font-size: 15px; }
+  .next-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .next-row span { color: var(--text-secondary); white-space: nowrap; }
+  .next-row strong { font-weight: 700; text-align: right; }
+  .next-val { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 0; }
+  .next-val em { font-style: normal; font-size: 13px; color: var(--text-secondary); }
+
+  /* Buttons */
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .icon-btn, .text-btn {
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: var(--control-bg);
+    color: var(--text-primary);
+    display: inline-grid;
+    place-items: center;
+  }
+  .icon-btn { width: 38px; padding: 0; }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .text-btn { padding: 0 14px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .text-btn.solid { background: var(--platinum-fill); color: var(--platinum-ink); border-color: transparent; box-shadow: var(--metal-bevel); font-weight: 700; }
+
+  /* Calendar */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+  .cal-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }
+  .nav { display: flex; gap: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+  .wd { font-size: 11px; font-weight: 700; text-align: center; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; padding-bottom: 4px; }
+  .day {
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    transition: transform 0.12s ease;
+  }
+  .day small { font-family: var(--font-body); font-size: 9px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.8; }
+  .day.first { background: var(--gold-fill); color: var(--gold-ink); box-shadow: var(--metal-bevel); }
+  .day.night { background: var(--platinum-fill); color: var(--platinum-ink); box-shadow: var(--metal-bevel); }
+  .day.free { background: var(--copper-tint); color: var(--copper-light); box-shadow: inset 0 0 0 1px var(--copper-border); }
+  .day.is-today { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+  .day.selected { transform: scale(0.9); box-shadow: var(--metal-bevel), 0 0 0 2px var(--blue-100); }
+  .day.free.selected { box-shadow: inset 0 0 0 1px var(--copper-border), 0 0 0 2px var(--blue-100); }
+  .picked { margin-top: 14px; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 10px; min-height: 22px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+
+  /* Setup notice */
+  .notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 1.45; }
+  .notice p { margin: 0; min-width: 0; }
+
+  /* Settings */
+  .settings h2 { font-family: var(--font-display); font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .settings p { margin: 0 0 14px; font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+  .settings label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+  input[type="date"] {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: var(--control-bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0 12px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .pattern { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+  .chip { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
+  .status { font-size: 13px; font-weight: 600; color: var(--platinum-light); margin-top: 10px; min-height: 18px; }
+
+  :focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div class="brand">Moje smjene</div>
+    <div class="date" id="topDate"></div>
+  </header>
+
+  <section class="card today" aria-live="polite">
+    <div class="label">Danas</div>
+    <div class="today-row">
+      <div class="badge" id="todayBadge"></div>
+      <div>
+        <div class="today-name" id="todayName"></div>
+        <div class="today-sub" id="todaySub"></div>
+      </div>
+    </div>
+    <div class="next">
+      <div class="next-row"><span>Sutra</span><strong id="tomorrow"></strong></div>
+      <div class="next-row"><span id="nextLabel"></span><div class="next-val"><strong id="nextValue"></strong><em id="nextWhen"></em></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="cal-head">
+      <div class="cal-title" id="calTitle"></div>
+      <div class="nav">
+        <button class="icon-btn" id="prev" type="button" aria-label="Prethodni mjesec">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="text-btn" id="toToday" type="button">Danas</button>
+        <button class="icon-btn" id="next" type="button" aria-label="Sljedeći mjesec">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="picked" id="picked"></div>
+    <div class="legend">
+      <span><i class="dot s-first"></i>Prva smjena</span>
+      <span><i class="dot s-night"></i>Noćna smjena</span>
+      <span><i class="dot s-free"></i>Slobodno</span>
+    </div>
+  </section>
+
+  <section class="card notice" id="notice" hidden>
+    <p>Odaberi datum kada si radila prvu smjenu, da se raspored poklopi s tvojim.</p>
+    <button class="text-btn solid" id="goSetup" type="button">Postavi datum</button>
+  </section>
+
+  <section class="card settings" id="settings">
+    <h2>Početak rotacije</h2>
+    <p>Odaberi bilo koji datum kada si radila prvu smjenu. Sve ostalo se računa na osnovu tog datuma.</p>
+    <label for="startDate">Datum prve smjene</label>
+    <input type="date" id="startDate">
+    <div class="pattern" aria-label="Tvoja rotacija od 4 dana">
+      <span class="chip s-first">1 · Prva</span>
+      <span class="chip s-night">2 · Noćna</span>
+      <span class="chip s-free">3 · Slobodno</span>
+      <span class="chip s-free">4 · Slobodno</span>
+    </div>
+    <div class="status" id="saveStatus"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var KEY = "myShifts.startDate";
+  var DAY_MS = 86400000;
+
+  var CYCLE = [
+    { id: "first", name: "Prva smjena", short: "Prva", sub: "Dan 1 od 4 u rotaciji" },
+    { id: "night", name: "Noćna smjena", short: "Noćna", sub: "Dan 2 od 4 u rotaciji" },
+    { id: "free", name: "Slobodan dan", short: "Slob.", sub: "Dan 3 od 4 · prvi slobodan dan" },
+    { id: "free", name: "Slobodan dan", short: "Slob.", sub: "Dan 4 od 4 · zadnji slobodan dan" }
+  ];
+
+  var ICONS = {
+    first: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>',
+    night: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>',
+    free: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9v11h13V9"/><path d="M10 20v-5.5h4V20"/></svg>'
+  };
+
+  // Bosnian names written out, so they look the same on every phone
+  var DAYS = ["nedjelja", "ponedjeljak", "utorak", "srijeda", "četvrtak", "petak", "subota"];
+  var DAYS_SHORT = ["ned", "pon", "uto", "sri", "čet", "pet", "sub"];
+  var MONTHS = ["januar", "februar", "mart", "april", "maj", "juni", "juli", "august", "septembar", "oktobar", "novembar", "decembar"];
+  var MONTHS_GEN = ["januara", "februara", "marta", "aprila", "maja", "juna", "jula", "augusta", "septembra", "oktobra", "novembra", "decembra"];
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  var fmtShort = { format: function (d) { return DAYS_SHORT[d.getDay()] + " " + d.getDate() + "." + (d.getMonth() + 1) + "."; } };
+  var fmtLong = { format: function (d) { return cap(DAYS[d.getDay()]) + ", " + d.getDate() + ". " + MONTHS_GEN[d.getMonth()]; } };
+  var fmtMonth = { format: function (d) { return cap(MONTHS[d.getMonth()]) + " " + d.getFullYear() + "."; } };
+  var WEEKDAYS = ["Pon", "Uto", "Sri", "Čet", "Pet", "Sub", "Ned"];
+
+  function $(id) { return document.getElementById(id); }
+  function pad(n) { return String(n).padStart(2, "0"); }
+  function keyOf(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function fromKey(k) { var p = k.split("-").map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+  function today() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  // Whole-day number that ignores daylight-saving shifts
+  function serial(d) { return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS); }
+  function validKey(k) { return typeof k === "string" && /^\d{4}-\d{2}-\d{2}$/.test(k); }
+
+  function load() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function save(v) { try { localStorage.setItem(KEY, v); return true; } catch (e) { return false; } }
+
+  var startKey = load();
+  var isSet = validKey(startKey);
+  if (!isSet) startKey = keyOf(today());
+
+  var t0 = today();
+  var viewY = t0.getFullYear();
+  var viewM = t0.getMonth();
+  var selectedKey = keyOf(t0);
+
+  function info(d) {
+    var diff = serial(d) - serial(fromKey(startKey));
+    var i = ((diff % 4) + 4) % 4;
+    return CYCLE[i];
+  }
+
+  function firstAfter(d, test) {
+    for (var n = 1; n <= 4; n++) {
+      var x = addDays(d, n);
+      if (test(info(x))) return { date: x, n: n };
+    }
+    return null;
+  }
+
+  function when(n) { return n === 1 ? "sutra" : "za " + n + " dana"; }
+
+  function renderToday() {
+    var t = today();
+    var s = info(t);
+    $("topDate").textContent = fmtLong.format(t);
+    $("todayBadge").className = "badge s-" + s.id;
+    $("todayBadge").innerHTML = ICONS[s.id];
+    $("todayName").textContent = s.name;
+    $("todaySub").textContent = s.sub;
+    $("tomorrow").textContent = info(addDays(t, 1)).name;
+
+    if (s.id === "free") {
+      var back = firstAfter(t, function (x) { return x.id !== "free"; });
+      $("nextLabel").textContent = "Nazad na posao";
+      $("nextValue").textContent = fmtShort.format(back.date);
+      $("nextWhen").textContent = when(back.n);
+    } else {
+      var off = firstAfter(t, function (x) { return x.id === "free"; });
+      $("nextLabel").textContent = "Slobodni dani";
+      $("nextValue").textContent = fmtShort.format(off.date) + " – " + fmtShort.format(addDays(off.date, 1));
+      $("nextWhen").textContent = when(off.n);
+    }
+  }
+
+  function renderCalendar() {
+    var grid = $("grid");
+    grid.innerHTML = "";
+    $("calTitle").textContent = fmtMonth.format(new Date(viewY, viewM, 1));
+
+    WEEKDAYS.forEach(function (w) {
+      var el = document.createElement("div");
+      el.className = "wd";
+      el.textContent = w;
+      grid.appendChild(el);
+    });
+
+    var lead = (new Date(viewY, viewM, 1).getDay() + 6) % 7; // Monday first
+    for (var b = 0; b < lead; b++) grid.appendChild(document.createElement("div"));
+
+    var daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
+    var todayKey = keyOf(today());
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var date = new Date(viewY, viewM, d);
+      var k = keyOf(date);
+      var s = info(date);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "day " + s.id + (k === todayKey ? " is-today" : "") + (k === selectedKey ? " selected" : "");
+      btn.innerHTML = d + "<small>" + s.short + "</small>";
+      btn.setAttribute("aria-label", fmtLong.format(date) + ": " + s.name);
+      btn.dataset.key = k;
+      grid.appendChild(btn);
+    }
+    renderPicked();
+  }
+
+  function renderPicked() {
+    var d = fromKey(selectedKey);
+    var s = info(d);
+    $("picked").innerHTML = "";
+    var dot = document.createElement("i");
+    dot.className = "dot s-" + s.id;
+    var text = document.createElement("span");
+    text.textContent = fmtLong.format(d) + " — " + s.name;
+    $("picked").appendChild(dot);
+    $("picked").appendChild(text);
+  }
+
+  function renderAll() {
+    $("notice").hidden = isSet;
+    $("startDate").value = startKey;
+    renderToday();
+    renderCalendar();
+  }
+
+  $("grid").addEventListener("click", function (e) {
+    var btn = e.target.closest(".day");
+    if (!btn) return;
+    selectedKey = btn.dataset.key;
+    renderCalendar();
+  });
+
+  $("prev").addEventListener("click", function () {
+    viewM--; if (viewM < 0) { viewM = 11; viewY--; }
+    renderCalendar();
+  });
+  $("next").addEventListener("click", function () {
+    viewM++; if (viewM > 11) { viewM = 0; viewY++; }
+    renderCalendar();
+  });
+  $("toToday").addEventListener("click", function () {
+    var t = today();
+    viewY = t.getFullYear(); viewM = t.getMonth(); selectedKey = keyOf(t);
+    renderCalendar();
+  });
+
+  $("startDate").addEventListener("change", function (e) {
+    var v = e.target.value;
+    if (!validKey(v)) return;
+    startKey = v;
+    isSet = true;
+    var ok = save(v);
+    $("saveStatus").textContent = ok ? "Sačuvano. Kalendar je ažuriran." : "Nije moguće sačuvati na ovom uređaju. Datum će se poništiti kad zatvoriš aplikaciju.";
+    renderAll();
+  });
+
+  $("goSetup").addEventListener("click", function () {
+    $("settings").scrollIntoView({ behavior: "smooth", block: "center" });
+    $("startDate").focus();
+  });
+
+  // Refresh when the app comes back to the screen (e.g. the next morning)
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") renderAll();
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
